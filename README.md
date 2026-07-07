@@ -1,59 +1,180 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Admin Starter Kit
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A production-minded Laravel starter kit for building authenticated admin panels quickly. It includes custom authentication flows, a Bootstrap 5 admin interface, role-based access control, profile management, database-backed settings, and feature test coverage.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Custom login, registration, logout, email verification, forgot password, and reset password screens
+- Protected admin dashboard with sidebar navigation, top bar, breadcrumbs, flash messages, and toast alerts
+- User management with create, edit, delete, restore, force delete, status updates, search, filtering, pagination, and avatar upload
+- Role and permission management powered by `spatie/laravel-permission`
+- Profile management for account details, password updates, session cleanup, and account deletion
+- Database-backed application settings for site name, branding, currency, timezone, and contact email
+- Reusable Blade components for layouts, forms, breadcrumbs, headers, flash messages, and toasts
+- Focused feature tests for authentication, profiles, settings, roles, permissions, and user management
+- GitHub Actions workflow for automated test runs
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Laravel 13
+- PHP 8.3+
+- MySQL 8 or compatible MariaDB
+- Bootstrap 5 Blade UI
+- Vite
+- PHPUnit 12
+- Spatie Laravel Permission
 
-## Learning Laravel
+## Requirements
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Make sure these tools are installed before setting up the project:
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.3 or newer
+- Composer
+- Node.js 20 or newer
+- npm
+- MySQL 8 or compatible MariaDB
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Installation
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Clone the repository and install the backend dependencies:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Create your local environment file:
 
-## Contributing
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Generate the application key:
 
-## Code of Conduct
+```bash
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Update `.env` with your database credentials, then run the migrations and seeders:
 
-## Security Vulnerabilities
+```bash
+php artisan migrate --seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Install frontend dependencies and build assets:
+
+```bash
+npm install
+npm run build
+```
+
+## Local Development
+
+Start the Laravel application:
+
+```bash
+php artisan serve
+```
+
+For frontend development with Vite:
+
+```bash
+npm run dev
+```
+
+The project also includes a Composer development command that starts the server, queue listener, and Vite together:
+
+```bash
+composer run dev
+```
+
+## Demo Accounts
+
+After seeding, these accounts are available. Each uses the password `password`.
+
+| Name | Email | Roles |
+| --- | --- | --- |
+| Admin User | `admin@example.com` | `super_admin`, `admin` |
+| Reviewer User | `reviewer@example.com` | `reviewer` |
+| Customer User | `customer@example.com` | `customer`, `user` |
+
+## Useful Commands
+
+```bash
+php artisan migrate:fresh --seed
+php artisan test
+composer run test
+npm run build
+```
+
+## Project Structure
+
+| Path | Purpose |
+| --- | --- |
+| `app/Http/Controllers/Auth` | Authentication flow controllers |
+| `app/Http/Controllers/Admin` | Admin dashboard, users, roles, permissions, settings, and profile controllers |
+| `app/Http/Requests` | Form request validation |
+| `app/Models` | User, role, permission, and setting models |
+| `app/Policies` | Authorization policies |
+| `app/Services/SettingService.php` | Settings persistence and lookup logic |
+| `app/Support/helpers.php` | Global helper functions, including `setting()` |
+| `database/migrations` | Database schema changes |
+| `database/seeders` | Default roles, permissions, settings, and demo users |
+| `resources/views/auth` | Authentication views |
+| `resources/views/admin` | Admin panel views |
+| `resources/views/components` | Shared Blade UI components |
+| `tests/Feature` | Feature test coverage for core workflows |
+
+## Authorization
+
+Access control is built around roles and permissions. The default permissions include:
+
+- `dashboard.view`
+- `users.view`
+- `users.create`
+- `users.update`
+- `users.delete`
+- `roles.manage`
+- `permissions.manage`
+- `settings.manage`
+- `profile.manage`
+
+The `super_admin` and `admin` roles receive all permissions by default. Reviewer, customer, and user roles receive a smaller permission set suitable for limited access.
+
+## Settings
+
+Application settings are stored in the database and can be managed from the admin area by users with the `settings.manage` permission. Use the global helper to read settings in application code:
+
+```php
+setting('site_name', 'Starter Kit');
+```
+
+## Testing
+
+Run the full test suite with:
+
+```bash
+php artisan test
+```
+
+Or use the Composer test script:
+
+```bash
+composer run test
+```
+
+The included GitHub Actions workflow runs tests against MySQL 8 on pushes to `main` and pull requests.
+
+## Deployment Notes
+
+Before deploying, make sure to:
+
+- Configure production environment variables in `.env`
+- Set `APP_ENV=production` and `APP_DEBUG=false`
+- Run `composer install --no-dev --optimize-autoloader`
+- Run `php artisan migrate --force`
+- Build frontend assets with `npm run build`
+- Cache configuration, routes, and views as appropriate for your hosting environment
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-"# starter-kit" 
+This project is open-sourced software licensed under the MIT license.
